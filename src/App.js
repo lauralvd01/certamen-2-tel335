@@ -1,11 +1,13 @@
 // import logo from './logo.svg';
-// import './App.css';
+import './App.css';
 import { Container } from 'react-bootstrap';
+import Search from './components/Search';
 
 function App() {
   return (
     <Container>
-      <h1>Hola Mundo</h1>
+      <h1>Certamen 2 - TEL335 : Facts sobre Chuck Norris</h1>
+      <Search></Search>
     </Container>
   );
 }
