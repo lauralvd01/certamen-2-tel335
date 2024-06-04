@@ -7,10 +7,11 @@ La carpeta inicial fue creada siguienco [Create React App documentation](https:/
 > npx create-react-app certamen-2-tel335
 ```
 
-Se anado react-bootstrap y bootstrap via 
+Se anado react-bootstrap, bootstrap, y axios via 
 
 ```
 > npm install react-bootstrap bootstrap
+> npm install axios
 ```
 
 ## Instrucciones para leventar
@@ -35,4 +36,5 @@ Para instalar las dependencias (por hacer solo antes de que se levente la aplica
 ## Librerias que se usaran
 
 - React-bootstrap y Bootstrap
+- Axios
 
