@@ -1,19 +1,5 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
 
-let favorits = []
-
-const updateFavorit = (id) => {
-    const index = favorits.find((old_id) => old_id === id)
-    if (index) {
-        favorits = favorits.filter((old_id) => old_id !== id)
-    }
-    else {
-        favorits.push(id)
-    }
-    console.log(favorits)
-}
-
-
 function FactsList(props) {
     if (props.factsList == null || props.factsList.length === 0) {
         return null;
@@ -40,7 +26,7 @@ function FactsList(props) {
                                             <p>Categories : {fact.categories.join(', ')}</p>
                                         </Col>
                                         <Col lg={2}>
-                                            <Button onClick={(component) => {updateFavorit(fact.id)}}>Me gusta</Button>
+                                            <Button onClick={() => {props.updateFavorit(fact.id)}}>Me gusta</Button>
                                         </Col>
                                     </Row>
                                     )

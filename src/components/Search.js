@@ -1,4 +1,4 @@
-import { Button, Container, Form, Row } from "react-bootstrap";
+import { Button, Container, Form, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -82,23 +82,51 @@ function Search() {
             }
     }, [haveToSearch, searching, queryInput])
 
-    const clickToSearch = () => {
-        setHaveToSearch(true);
+
+    let favorits = []
+
+    const updateFavorit = (id) => {
+        const index = favorits.find((old_id) => old_id === id)
+        if (index) {
+            favorits = favorits.filter((old_id) => old_id !== id)
+        }
+        else {
+            favorits.push(id)
+        }
+        console.log(favorits)
+    }
+
+    const getFavorits = () => {
+        const fetchDataFav = async (id) => {
+            const result = await axios.get(`https://api.chucknorris.io/jokes/${id}`);
+            console.log(result.data)
+        }
+        for (let index = 0; index < favorits.length; index++) {
+            const element = favorits[index];
+            fetchDataFav(element)
+        }
     }
 
     return (
         <section id="search">
             <Container>
                 <Row style={{marginTop:"5%"}}>
-                    <h2>Ingresa el objeto de tu busqueda :</h2>
+                    <h2>Ingresa un tema para buscar facts relacionados :</h2>
                 </Row>
                 <Row style={{marginTop:"1%"}}>
                     <Form>
                         <Form.Group controlId="searchInput">
                             <Form.Control type="text" placeholder="Escribe lo que buscas" onChange={(component) => setQueryInput(component.target.value)}/>
                         </Form.Group>
-                        <Button variant="primary" onClick={clickToSearch} style={{marginTop:"1%"}}>Buscar</Button>
                     </Form>
+                </Row>
+                <Row style={{marginTop:"1%", justifyContent:"space-between"}}>
+                    <Col lg={3}>
+                        <Button variant="primary" onClick={() => {setHaveToSearch(true)}}>Buscar</Button>
+                    </Col>    
+                    <Col lg={3}>
+                        <Button variant="danger" onClick={getFavorits}>Ver a mis facts favoritos</Button>
+                    </Col>
                 </Row>
                 <Row style={{marginTop:"5%"}}>
                     <h2>Resultados :</h2>
@@ -107,7 +135,7 @@ function Search() {
                     <div className="d-flex justify-content-center">
                         <SpinnerLoader haveToSearch={haveToSearch} searching={searching}/>
                     </div>
-                    <FactsList factsList={factListManual}/>
+                    <FactsList factsList={factListManual} updateFavorit={updateFavorit}/>
                 </Row>
             </Container>
         </section>
