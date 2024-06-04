@@ -1,4 +1,17 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+
+let favorits = []
+
+const updateFavorit = (id) => {
+    const index = favorits.find((old_id) => old_id === id)
+    if (index) {
+        favorits = favorits.filter((old_id) => old_id !== id)
+    }
+    else {
+        favorits.push(id)
+    }
+    console.log(favorits)
+}
 
 
 function FactsList(props) {
@@ -14,17 +27,20 @@ function FactsList(props) {
                             {
                                 props.factsList.map((fact, index) => {
                                     return (<Row key={index} style={{marginTop:"2px"}}>
-                                        <Col lg={1}>
+                                        <Col lg={2}>
                                             <h3>El fact</h3>
                                         </Col>
-                                        <Col lg={6}>
+                                        <Col lg={3}>
                                             <p>{fact.value}</p>
                                         </Col>
-                                        <Col lg={2}>
+                                        <Col lg={3}>
                                             <p>Fecha de creación : {fact.created_at}</p>
                                         </Col>
-                                        <Col lg={3}>
+                                        <Col lg={2}>
                                             <p>Categories : {fact.categories.join(', ')}</p>
+                                        </Col>
+                                        <Col lg={2}>
+                                            <Button onClick={(component) => {updateFavorit(fact.id)}}>Me gusta</Button>
                                         </Col>
                                     </Row>
                                     )

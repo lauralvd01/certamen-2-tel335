@@ -89,18 +89,21 @@ function Search() {
     return (
         <section id="search">
             <Container>
-                <Row>
+                <Row style={{marginTop:"5%"}}>
                     <h2>Ingresa el objeto de tu busqueda :</h2>
                 </Row>
-                <Row>
+                <Row style={{marginTop:"1%"}}>
                     <Form>
                         <Form.Group controlId="searchInput">
                             <Form.Control type="text" placeholder="Escribe lo que buscas" onChange={(component) => setQueryInput(component.target.value)}/>
                         </Form.Group>
-                        <Button variant="primary" onClick={clickToSearch}>Buscar</Button>
+                        <Button variant="primary" onClick={clickToSearch} style={{marginTop:"1%"}}>Buscar</Button>
                     </Form>
                 </Row>
-                <Row style={{marginTop:"5px"}}>
+                <Row style={{marginTop:"5%"}}>
+                    <h2>Resultados :</h2>
+                </Row>
+                <Row style={{marginTop:"2%"}}>
                     <div className="d-flex justify-content-center">
                         <SpinnerLoader haveToSearch={haveToSearch} searching={searching}/>
                     </div>
