@@ -96,16 +96,27 @@ function Search() {
         console.log(favorits)
     }
 
+    const [favList, setFavList] = useState([]);
+
     const getFavorits = () => {
         const fetchDataFav = async (id) => {
             const result = await axios.get(`https://api.chucknorris.io/jokes/${id}`);
-            console.log(result.data)
+            let newList = favList
+            newList.push(result.data)
+            setFavList(newList)
         }
         for (let index = 0; index < favorits.length; index++) {
             const element = favorits[index];
             fetchDataFav(element)
         }
     }
+
+    useEffect( () => {
+        if (favList.length !== 0) {
+            console.log("FavList not empty")
+            console.log(favList)
+        }
+    })
 
     return (
         <section id="search">
@@ -136,6 +147,7 @@ function Search() {
                         <SpinnerLoader haveToSearch={haveToSearch} searching={searching}/>
                     </div>
                     <FactsList factsList={factListManual} updateFavorit={updateFavorit}/>
+                    <FactsList factsList={favList} updateFavorit={updateFavorit}/>
                 </Row>
             </Container>
         </section>
