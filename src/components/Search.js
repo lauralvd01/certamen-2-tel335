@@ -59,12 +59,12 @@ function Search() {
     const [favLoading, setFavLoading] = useState(false);
 
     const getFavorits = () => {
+        let newList = []
+
         const fetchDataFav = async (id) => {
             const result = await axios.get(`https://api.chucknorris.io/jokes/${id}`);
             if (result.data) {
-                let newList = favList
                 newList.push(result.data)
-                setFavList(newList)
                 // Set response status to correct code 200
             }
             else {
@@ -78,6 +78,7 @@ function Search() {
                 const element = favorits[index];
                 fetchDataFav(element)
             }
+            setFavList(newList)
         }
     }
 
