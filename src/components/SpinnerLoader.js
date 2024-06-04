@@ -1,10 +1,7 @@
 import { Spinner } from "react-bootstrap";
 
 function SpinnerLoader(props) {
-    if (!props.haveToSearch) {
-        return null;
-    }
-    if (props.searching) {
+    if (!props.loading) {
         return null;
     } else {
         return (

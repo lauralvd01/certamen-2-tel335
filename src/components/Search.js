@@ -4,83 +4,42 @@ import axios from "axios";
 
 import SpinnerLoader from "./SpinnerLoader"
 import FactsList from "./FactsList";
-
-const factListManual = [
-    {
-        "categories": [],
-        "created_at": "2020-01-05 13:42:26.447675",
-        "icon_url": "https://assets.chucknorris.host/img/avatar/chuck-norris.png",
-        "id": "5WodmFzySCKkWxuy1YqYJQ",
-        "updated_at": "2020-01-05 13:42:26.447675",
-        "url": "https://api.chucknorris.io/jokes/5WodmFzySCKkWxuy1YqYJQ",
-        "value": "Chuck Norris once rocked so hard in an AC/DC concert that it was felt even in 1906. They called it the great San Francisco earthquake."
-    },
-    {
-        "categories": [
-        "explicit"
-        ],
-        "created_at": "2020-01-05 13:42:29.855523",
-        "icon_url": "https://assets.chucknorris.host/img/avatar/chuck-norris.png",
-        "id": "CbAdkF8IReK9hstCWkoVug",
-       "updated_at": "2020-01-05 13:42:29.855523",
-        "url": "https://api.chucknorris.io/jokes/CbAdkF8IReK9hstCWkoVug",
-        "value": "Chuck Norris got lost in San Francisco’s Castro District. A man asked Chuck how he’d like to try a gay experience. Chuck asked how he’d like to experience the One Finger Exploding Brain Death Touch."
-    }
-]
+import FavList from "./FavList";
 
 function Search() {
-    const [haveToSearch, setHaveToSearch] = useState(false);
     const [searching, setSearching] = useState(false);
-    //const [factsList, setFactsList] = useState([]);
+    const [factsList, setFactsList] = useState([]);
     const [queryInput, setQueryInput] = useState("");
 
-    // Por alguna razon el Hools no funciona bien... setFactcsList
-    // --> Se creo la variable manualmente para actualizarla pero asi el valor transmitido a <FactsList> no cambia y se queda como undefined
-    // --> Para avanzar se puso el json directamente (repuesta de la busqueda Francisco)
-    
-    // let factListManual = [];
-
-    // const updateManual = (newList) => {
-    //     console.log("Old list")
-    //     console.log(factListManual)
-    //     console.log("New list")
-    //     console.log(newList)
-    //     for (let index = 0; index < newList.length; index++) {
-    //         factListManual[index] = newList[index]
-    //     }
-    //     console.log("Actual list")
-    //     console.log(factListManual)
-    // }
-
-    useEffect(() => {
+    const getSearch = () => {
         const fetchData = async () => {
-            if (searching) {
-                const result = await axios.get(`https://api.chucknorris.io/jokes/search?query=${queryInput}`);
-                if (result.data) {
-                    setHaveToSearch(false);
-                    setSearching(false);
-                    // setFactsList(result.data.result)
-                    // updateManual(result.data.result);
-                    setQueryInput("");
-                    // Set response status to correct code 200
-                }
-                else {
-                    alert(result.request.statusText)
-                    // Set response status to error code 404
-                }
+            const result = await axios.get(`https://api.chucknorris.io/jokes/search?query=${queryInput}`);
+            if (result.data) {
+                setFactsList(result.data.result)
+                setQueryInput("");
+                // Set response status to correct code 200
+            }
+            else {
+                alert(result.request.statusText)
+                // Set response status to error code 404
             }
         }
-        if (haveToSearch)
-            {
-                if (queryInput.length === 0) {
-                    alert("Ingresa un input a buscar");
-                    setHaveToSearch(false);
-                } else {
-                    setSearching(true);
-                    fetchData();
-                }
-            }
-    }, [haveToSearch, searching, queryInput])
+
+        if (queryInput.length === 0) {
+            alert("Ingresa un input a buscar");
+        } 
+        else {
+            setSearching(true);
+            fetchData();
+        }
+    }
+
+    useEffect( () => {
+        if (factsList.length > 0) {
+            console.log("factsList actualizada !")
+            setSearching(false)
+        }
+    }, [factsList.length])
 
 
     let favorits = []
@@ -97,26 +56,37 @@ function Search() {
     }
 
     const [favList, setFavList] = useState([]);
+    const [favLoading, setFavLoading] = useState(false);
 
     const getFavorits = () => {
         const fetchDataFav = async (id) => {
             const result = await axios.get(`https://api.chucknorris.io/jokes/${id}`);
-            let newList = favList
-            newList.push(result.data)
-            setFavList(newList)
+            if (result.data) {
+                let newList = favList
+                newList.push(result.data)
+                setFavList(newList)
+                // Set response status to correct code 200
+            }
+            else {
+                alert(result.request.statusText)
+                // Set response status to error code 404
+            }
         }
-        for (let index = 0; index < favorits.length; index++) {
-            const element = favorits[index];
-            fetchDataFav(element)
+        if (favorits.length > 0) {
+            setFavLoading(true)
+            for (let index = 0; index < favorits.length; index++) {
+                const element = favorits[index];
+                fetchDataFav(element)
+            }
         }
     }
 
     useEffect( () => {
-        if (favList.length !== 0) {
-            console.log("FavList not empty")
-            console.log(favList)
+        if (favList.length > 0) {
+            console.log("FavList actualizada !")
+            setFavLoading(false)
         }
-    })
+    },[favList.length])
 
     return (
         <section id="search">
@@ -133,7 +103,7 @@ function Search() {
                 </Row>
                 <Row style={{marginTop:"1%", justifyContent:"space-between"}}>
                     <Col lg={3}>
-                        <Button variant="primary" onClick={() => {setHaveToSearch(true)}}>Buscar</Button>
+                        <Button variant="primary" onClick={getSearch}>Buscar</Button>
                     </Col>    
                     <Col lg={3}>
                         <Button variant="danger" onClick={getFavorits}>Ver a mis facts favoritos</Button>
@@ -144,10 +114,18 @@ function Search() {
                 </Row>
                 <Row style={{marginTop:"2%"}}>
                     <div className="d-flex justify-content-center">
-                        <SpinnerLoader haveToSearch={haveToSearch} searching={searching}/>
+                        <SpinnerLoader loading={searching}/>
                     </div>
-                    <FactsList factsList={factListManual} updateFavorit={updateFavorit}/>
-                    <FactsList factsList={favList} updateFavorit={updateFavorit}/>
+                    <FactsList factsList={factsList} updateFavorit={updateFavorit}/>
+                </Row>
+                <Row style={{marginTop:"5%"}}>
+                    <h2>Favoritos :</h2>
+                </Row>
+                <Row>
+                    <div className="d-flex justify-content-center">
+                        <SpinnerLoader loading={favLoading}/>
+                    </div>
+                    <FavList favList={favList}/>
                 </Row>
             </Container>
         </section>
